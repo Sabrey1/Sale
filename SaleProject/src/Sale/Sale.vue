@@ -93,11 +93,17 @@
       <div class="payment-section">
  <router-link to="/payment" custom v-slot="{ navigate }">
   <button @click="navigate" class="payment-button">
-    <div class="payment-label">Payment</div>
-    <div class="payment-amount">${{ total.toFixed(2) }}</div>
-    <div class="payment-details">
-      Total Qty: {{ totalQuantity }} | {{ totalItems.toLocaleString() }} ៛
-    </div>
+   <div class="payment-grid">
+  <div class="payment-label">Payment</div>
+  <div class="payment-amount">${{ total.toFixed(2) }}</div>
+</div>
+
+    <div class="payment-row">
+  <div class="total-quantity">Total Qty: {{ totalQuantity }}</div>
+  <div class="exchange-rate">$1.00 = 4,100 ៛</div>
+  <div class="payment-details">{{ totalItems.toLocaleString() }} ៛</div>
+</div>
+
   </button>
 </router-link>
 
@@ -113,9 +119,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-
- 
-
 const orderItems = ref([
   { id: 1, name: 'Pomfret Steam Fresh Full', unitPrice: 14.5, quantity: 1, time: '10:32:53 AM', image: 'https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Arancini-bites-hero-image-20583bc.jpg?quality=90&resize=708,643' },
   { id: 2, name: 'Pomfret Steam Fresh Half', unitPrice: 7.5, quantity: 1, time: '10:32:53 AM', image: 'https://www.shutterstock.com/image-photo/fried-salmon-steak-cooked-green-600nw-2489026949.jpg' },
@@ -130,6 +133,8 @@ const totalQuantity = computed(() => orderItems.value.reduce((sum, i) => sum + i
 const totalItems = computed(() => Math.round(total.value * 4100))
 
 const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(2)}`)
+
+
 </script>
 
 <style scoped>
@@ -165,7 +170,14 @@ const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(
 .order-item { display: flex; padding: 15px 0; border-bottom: 1px solid #ecf0f1; }
 .item-image { width: 50px; height: 50px; border-radius: 8px; margin-right: 15px; overflow: hidden; background: #f8f9fa; }
 .item-image img { width: 100%; height: 100%; object-fit: cover; }
-.item-details { flex: 1; }
+.item-details {
+  flex: 1;                /* keeps it flexible */
+  text-align: left;       /* aligns content to left */
+  display: flex;           /* optional: flex column for inner items */
+  flex-direction: column;  /* stack the name, unit-price, and time vertically */
+  justify-content: flex-start; /* optional: start from top */
+  align-items: flex-start;     /* align items to left */
+}
 .item-name { font-weight: 600; color: #2c3e50; margin-bottom: 5px; }
 .item-unit-price { font-size: 14px; color: #7f8c8d; margin-bottom: 5px; }
 .item-time { font-size: 12px; color: #95a5a6; }
@@ -181,22 +193,61 @@ const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(
 .summary-row.total { color: #2c3e50; font-weight: bold; font-size: 16px; border-top: 1px solid #ecf0f1; margin-top: 10px; padding-top: 10px; }
 
 .payment-button {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
+  display: flex;
+  flex-direction: column; /* stack label, amount, and payment-row vertically */
+  align-items: stretch;    /* make child grid stretch full width */
   background: #27ae60;
   color: #fff;
-  padding: 15px 20px;
+  padding: 10px;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 100%; /* or auto for content width */
+  width: 100%;
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 .payment-button:hover {
   background: #2ecc71; /* lighter green on hover */
 }
+ 
+.payment-row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr); /* 12 equal columns */
+  width: 100%;
+  margin-top: 5px;
+  gap: 10px; /* optional spacing between items */
+}
+
+/* Each item takes 4 columns (12 / 3 = 4) */
+.total-quantity {
+  font-size: 14px;
+  grid-column: span 4;
+  text-align: left;
+}
+
+.exchange-rate {
+  background-color: white;
+  color: black;
+  padding: 1px;
+  border-radius: 4px;
+  font-size: 14px;
+  grid-column: span 5;
+  text-align: center;
+}
+
+.payment-details {
+  grid-column: span 3;
+  text-align: right;
+  font-size: 14px;
+  
+}
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr); /* 12 equal columns */
+  align-items: center;
+  gap: 10px; /* optional spacing */
+  width: 100%;
+}
+
 .payment-section {
   position: fixed; /* makes bottom: 0 work */
   bottom: 0;       /* stick to bottom */
@@ -209,15 +260,39 @@ const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(
   box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* optional shadow */
   z-index: 1000;   /* ensures it’s above other content */
 }
+.full-height-container {
+  height: 100%;              /* take full height of parent */
+  display: flex;             /* flexbox to stretch child */
+  flex: 1; 
+                    /* allow it to grow */
+}
 
 .payment-left { display: flex; flex-direction: column; }
-.payment-label { font-size: 14px; opacity: 0.9; }
-.payment-amount { font-size: 24px; font-weight: bold; }
-.payment-details { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-.submit-btn { background: #2ecc71; color: #fff; padding: 12px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; border: none; transition: 0.2s; }
-.submit-btn:hover { background: #27ae60; }
+ 
 
+.payment-label {
+  grid-column: span 2; /* 2/12 columns */
+  text-align: left;
+  font-size: 18px;
+  font-weight: 600;
+}
 
+.submit-btn {
+  background: #5b2ae3;
+  color: #fff;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+}
+
+.payment-amount {
+  grid-column: span 10; /* 10/12 columns */
+  text-align: right;
+  font-size: 24px;
+  font-weight: bold;
+}
 
 /* Responsive */
 @media (max-width: 767px) {
