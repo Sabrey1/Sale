@@ -1,7 +1,10 @@
 <template>
   <div class="full-page">
     <div class="header">
-      <h1>Payment</h1>
+      <button @click="goBack" class="back-btn">
+      <i class="fas fa-arrow-left" style="color: white;margin-left: 15px;"></i>
+    </button>
+      <h2>Payment</h2>
     </div>
 
     <div class="payment-buttons">
@@ -19,15 +22,29 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const payments = ref(['Case', 'ABA'])
+
+const payments = ref(['Cash', 'ABA'])
+
+const router = useRouter()
 
 const selectPayment = (payment) => {
   console.log('Selected payment:', payment)
+
+  if (payment === 'ABA') {
+    router.push('/scan-qr') 
+  } else {
+    console.log('Cash selected')
+  }
+}
+
+const goBack = () => {
+  router.back() // same as router.go(-1)
 }
 </script>
 
-<style>
+<style scoped>
 html, body {
   margin: 0;
   padding: 0;
@@ -47,15 +64,19 @@ html, body {
 }
 
 .header {
-  width: 100%;             /* full width */
-  text-align: center;      /* center the title */
+  width: 100%;
+  text-align: center;
+  background-color: #032ce2;
+  color: white;
+  display: flex;
 }
 
-.header h1 {
-  margin-bottom: 40px;
+.header h2 {
+  margin: 10px;
 }
 
 .payment-buttons {
+  margin-top: 20px;
   display: flex;
   gap: 20px;
   width: 100%;             /* full width */
@@ -75,5 +96,13 @@ html, body {
 
 .payment-btn:hover {
   background-color: #3f51d5;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 10px;
 }
 </style>

@@ -218,7 +218,7 @@ const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(
 
 /* Each item takes 4 columns (12 / 3 = 4) */
 .total-quantity {
-  font-size: 14px;
+  font-size: 12px;
   grid-column: span 4;
   text-align: left;
 }
@@ -226,9 +226,9 @@ const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(
 .exchange-rate {
   background-color: white;
   color: black;
-  padding: 1px;
+  height: 20px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
   grid-column: span 5;
   text-align: center;
 }
@@ -236,7 +236,7 @@ const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(
 .payment-details {
   grid-column: span 3;
   text-align: right;
-  font-size: 14px;
+  font-size: 12px;
   
 }
 
@@ -280,7 +280,7 @@ const submitOrder = () => alert(`Order submitted! Total: $${total.value.toFixed(
 .submit-btn {
   background: #5b2ae3;
   color: #fff;
-  padding: 12px 24px;
+  padding: 12px ;
   font-weight: 600;
   cursor: pointer;
   font-size: 14px;
